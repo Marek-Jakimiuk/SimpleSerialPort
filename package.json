@@ -1,0 +1,19 @@
+{
+  "name": "simple-serial-port",
+  "version": "1.0.0",
+  "description": "Simple javascript project to transfer data from serial-port.",
+  "main": "main.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/MarekJakimiuk1/SimpleSerialPort.git"
+  },
+  "author": "Marek Jakimiuk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MarekJakimiuk1/SimpleSerialPort/issues"
+  },
+  "homepage": "https://github.com/MarekJakimiuk1/SimpleSerialPort#readme"
+}
