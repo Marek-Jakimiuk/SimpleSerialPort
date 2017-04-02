@@ -1,0 +1,70 @@
+<!--
+    Created by Marek Jakimiuk 2017
+-->
+<!doctype html>
+<html lang="PL">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+
+<body>
+<h1>Simple serial-port communication with embedded system using websocket.</h1>
+
+    <canvas id="myCanvas" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
+    <form action="">
+        <input type="button" id="buttonToggle" value="ON" onclick="toggle(this);">
+    </form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect(document.location.href);
+    var myId;
+
+    socket.on('on connection', function (data) {
+        console.log("\n" + "Welcome " + data.client);
+        console.log("Number of client connected: " + data.clientCount);
+    });
+
+    socket.on('on disconnect',function(data) {
+        console.log("\n" + "New client: " + data.client);
+        console.log("Number of client connected: " + data.clientCount);
+    });
+
+    socket.on('your id',function(data) {
+        console.log("\n" + "Your id number: " + data.id);
+        myId = data.id;
+    });
+
+    socket.on('ack button status', function (data){
+        if(myId==data.by){
+            console.log("You send: " + data.status);
+        }
+        else{
+            console.log(data.by + " has send: "+ data.status);
+        }
+
+        if(data.status =='ON'){
+            document.getElementById("buttonToggle").value="ON";
+        }
+        else{
+            document.getElementById("buttonToggle").value="OFF";
+        }
+    });
+
+    function toggle(button)
+    {
+        if(document.getElementById("buttonToggle").value=="OFF"){
+            document.getElementById("myCanvas").style.background = "#d3ffa7";
+            socket.emit('button update event', { status: 'OFF' });
+        }
+        else if(document.getElementById("buttonToggle").value=="ON"){
+            document.getElementById("myCanvas").style.background = "#59d018";
+            socket.emit('button update event', { status: 'ON' });
+        }
+    }
+
+</script>
+</body>
+</html>
