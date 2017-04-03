@@ -1,6 +1,9 @@
 <!--
+
     Created by Marek Jakimiuk 2017
+
 -->
+
 <!doctype html>
 <html lang="PL">
 <head>
@@ -14,7 +17,8 @@
 
     <canvas id="myCanvas" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
     <form action="">
-        <input type="button" id="buttonToggle" value="ON" onclick="toggle(this);">
+        <input type="button" id="buttonON" value="LED_1_ON" onclick="LED_1_ON(this);">
+        <input type="button" id="buttonOFF" value="LED_2_OFF" onclick="LED_1_OFF(this);">
     </form>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -38,31 +42,28 @@
     });
 
     socket.on('ack button status', function (data){
-        if(myId==data.by){
+        if(myId == data.by){
             console.log("You send: " + data.status);
         }
         else{
-            console.log(data.by + " has send: "+ data.status);
+            console.log(data.by + " has send: " + data.status);
         }
 
-        if(data.status =='ON'){
-            document.getElementById("buttonToggle").value="ON";
+        if(data.status =='LED_1_ON'){
+            document.getElementById("myCanvas").style.background = "#59d018";
         }
-        else{
-            document.getElementById("buttonToggle").value="OFF";
+
+        if(data.status =='LED_1_OFF'){
+            document.getElementById("myCanvas").style.background = "#d3ffa7";
         }
     });
 
-    function toggle(button)
-    {
-        if(document.getElementById("buttonToggle").value=="OFF"){
-            document.getElementById("myCanvas").style.background = "#d3ffa7";
-            socket.emit('button update event', { status: 'OFF' });
-        }
-        else if(document.getElementById("buttonToggle").value=="ON"){
-            document.getElementById("myCanvas").style.background = "#59d018";
-            socket.emit('button update event', { status: 'ON' });
-        }
+    function LED_1_ON(button){
+        socket.emit('button update event', { status: 'LED_1_ON' });
+    }
+
+    function LED_1_OFF(button){
+        socket.emit('button update event', { status: 'LED_1_OFF' });
     }
 
 </script>

@@ -1,3 +1,8 @@
+/*
+
+    Created by Marek Jakimiuk 2017
+
+*/
 
 
 // Requires
@@ -9,7 +14,7 @@ var app = require('http').createServer(handler),
 
 // Initial SerialPort
 var SerialPort = sp
-var SerialHardwarePort = 'COM1';
+var SerialHardwarePort = 'COM14';
 var serialPort = new SerialPort(SerialHardwarePort,
     {   baudrate: 57600,
         dataBits: 8,
@@ -22,7 +27,7 @@ var serialPort = new SerialPort(SerialHardwarePort,
 var networkInterfaces=os.networkInterfaces();
 var commonStatus = 'ON';
 
-app.listen(7080);
+app.listen(9000);
 
 
 serialPort.on("open", function() {
@@ -67,14 +72,15 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('button update event', function (data) {
-        //console.log(data.status);
-        if(data.status == 'ON'){
-            commonStatus = 'OFF';
-            serialPort.write("LEDON\n");
+
+        if(data.status == 'LED_1_ON'){
+            commonStatus = 'LED_1_ON';
+            serialPort.write(commonStatus + "\n");
         }
-        else{
-            commonStatus = 'ON';
-            serialPort.write("LEDOFF\n");
+
+        if(data.status == 'LED_1_OFF'){
+            commonStatus = 'LED_1_OFF';
+            serialPort.write(commonStatus + "\n");
         }
 
         io.sockets.emit('ack button status',
