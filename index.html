@@ -4,6 +4,7 @@
 
 -->
 
+
 <!doctype html>
 <html lang="PL">
 <head>
@@ -15,11 +16,32 @@
 <body>
 <h1>Simple serial-port communication with embedded system using websocket.</h1>
 
-    <canvas id="myCanvas" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
-    <form action="">
-        <input type="button" id="buttonON" value="LED_1_ON" onclick="LED_1_ON(this);">
-        <input type="button" id="buttonOFF" value="LED_2_OFF" onclick="LED_1_OFF(this);">
-    </form>
+        <form action="">
+            <label>Device 1: </label>
+                <canvas id="Relay_1" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
+                <input type="button" id="btn_1_ON" value="ON" onclick="Relay_ON(this,'Relay_1','_ON');">
+                <input type="button" id="btn_1_OFF" value="OFF" onclick="Relay_OFF(this,'Relay_1','_OFF');"><br>
+
+            <label>Device 2: </label>
+                <canvas id="Relay_2" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
+                <input type="button" id="btn_2_ON" value="ON" onclick="Relay_ON(this,'Relay_2','_ON');">
+                <input type="button" id="btn_2_OFF" value="OFF" onclick="Relay_OFF(this,'Relay_2','_OFF');"><br>
+
+            <label>Device 3: </label>
+                <canvas id="Relay_3" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
+                <input type="button" id="btn_3_ON" value="ON" onclick="Relay_ON(this,'Relay_3','_ON');">
+                <input type="button" id="btn_3_OFF" value="OFF" onclick="Relay_OFF(this,'Relay_3','_OFF');"><br>
+
+            <label>Device 4: </label>
+                <canvas id="Relay_4" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
+                <input type="button" id="btn_4_ON" value="ON" onclick="Relay_ON(this,'Relay_4','_ON');">
+                <input type="button" id="btn_4_OFF" value="OFF" onclick="Relay_OFF(this,'Relay_4','_OFF');"><br>
+
+            <label>Device 5: </label>
+                <canvas id="Relay_5" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
+                <input type="button" id="btn_5_ON" value="ON" onclick="Relay_ON(this,'Relay_5','_ON');">
+                <input type="button" id="btn_5_OFF" value="OFF" onclick="Relay_OFF(this,'Relay_5','_OFF');"><br>
+        </form>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -42,28 +64,28 @@
     });
 
     socket.on('ack button status', function (data){
-        if(myId == data.by){
+        if(myId === data.by){
             console.log("You send: " + data.status);
         }
         else{
-            console.log(data.by + " has send: " + data.status);
+            console.log(data.by + " has send: " + data.whichOne + data.status);
         }
 
-        if(data.status =='LED_1_ON'){
-            document.getElementById("myCanvas").style.background = "#59d018";
+        // DRY
+        if(data.status === '_ON'){
+            document.getElementById(data.whichOne).style.background = "#59d018";
         }
-
-        if(data.status =='LED_1_OFF'){
-            document.getElementById("myCanvas").style.background = "#d3ffa7";
+        else if(data.status === '_OFF') {
+            document.getElementById(data.whichOne).style.background = "#d3ffa7";
         }
     });
 
-    function LED_1_ON(button){
-        socket.emit('button update event', { status: 'LED_1_ON' });
+    function Relay_ON(button,relay,stan){
+        socket.emit('button update event', { whichOne: relay , status: stan});
     }
 
-    function LED_1_OFF(button){
-        socket.emit('button update event', { status: 'LED_1_OFF' });
+    function Relay_OFF(button,relay,stan){
+        socket.emit('button update event', { whichOne: relay , status: stan});
     }
 
 </script>
