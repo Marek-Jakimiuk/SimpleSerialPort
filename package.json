@@ -19,5 +19,9 @@
   "devDependencies": {
     "serialport": "^4.0.7",
     "socket.io": "^1.7.3"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.2.1"
   }
 }

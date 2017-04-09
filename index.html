@@ -11,38 +11,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 </head>
 
 <body>
 <h1>Simple serial-port communication with embedded system using websocket.</h1>
+<div class="container-fluid">
 
         <form action="">
+            <input type="button" id="checkconnect" class="btn btn-success btn-xs" value="Check" onclick="CheckConnect(this,'','CheckConnect');">
+            <input type="button" id="connect" class="btn btn-success btn-xs" value="Connect" onclick="Connect(this,'','Connect');">
+            <input type="button" id="disconnect" class="btn btn-success btn-xs" value="Disconnect" onclick="Disconnect(this,'','Disconnect');"><br>
             <label>Device 1: </label>
                 <canvas id="Relay_1" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
-                <input type="button" id="btn_1_ON" value="ON" onclick="Relay_ON(this,'Relay_1','_ON');">
-                <input type="button" id="btn_1_OFF" value="OFF" onclick="Relay_OFF(this,'Relay_1','_OFF');"><br>
+                <input type="button" id="btn_1_ON" class="btn btn-success btn-xs" value="ON" onclick="Relay_ON(this,'Relay_1','_ON');">
+                <input type="button" id="btn_1_OFF" value="OFF" class="btn btn-danger btn-xs" onclick="Relay_OFF(this,'Relay_1','_OFF');"><br>
 
             <label>Device 2: </label>
                 <canvas id="Relay_2" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
-                <input type="button" id="btn_2_ON" value="ON" onclick="Relay_ON(this,'Relay_2','_ON');">
-                <input type="button" id="btn_2_OFF" value="OFF" onclick="Relay_OFF(this,'Relay_2','_OFF');"><br>
+                <input type="button" id="btn_2_ON" class="btn btn-success btn-xs" value="ON" onclick="Relay_ON(this,'Relay_2','_ON');">
+                <input type="button" id="btn_2_OFF" value="OFF" class="btn btn-danger btn-xs" onclick="Relay_OFF(this,'Relay_2','_OFF');"><br>
 
             <label>Device 3: </label>
                 <canvas id="Relay_3" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
-                <input type="button" id="btn_3_ON" value="ON" onclick="Relay_ON(this,'Relay_3','_ON');">
-                <input type="button" id="btn_3_OFF" value="OFF" onclick="Relay_OFF(this,'Relay_3','_OFF');"><br>
+                <input type="button" id="btn_3_ON" class="btn btn-success btn-xs" value="ON" onclick="Relay_ON(this,'Relay_3','_ON');">
+                <input type="button" id="btn_3_OFF" value="OFF" class="btn btn-danger btn-xs" onclick="Relay_OFF(this,'Relay_3','_OFF');"><br>
 
             <label>Device 4: </label>
                 <canvas id="Relay_4" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
-                <input type="button" id="btn_4_ON" value="ON" onclick="Relay_ON(this,'Relay_4','_ON');">
-                <input type="button" id="btn_4_OFF" value="OFF" onclick="Relay_OFF(this,'Relay_4','_OFF');"><br>
+                <input type="button" id="btn_4_ON" class="btn btn-success btn-xs" value="ON" onclick="Relay_ON(this,'Relay_4','_ON');">
+                <input type="button" id="btn_4_OFF" value="OFF" class="btn btn-danger btn-xs" onclick="Relay_OFF(this,'Relay_4','_OFF');"><br>
 
             <label>Device 5: </label>
                 <canvas id="Relay_5" width="20" height="20" style="border-radius: 100px; background-color: #d3ffa7;"></canvas>
-                <input type="button" id="btn_5_ON" value="ON" onclick="Relay_ON(this,'Relay_5','_ON');">
-                <input type="button" id="btn_5_OFF" value="OFF" onclick="Relay_OFF(this,'Relay_5','_OFF');"><br>
+                <input type="button" id="btn_5_ON" class="btn btn-success btn-xs" value="ON" onclick="Relay_ON(this,'Relay_5','_ON');">
+                <input type="button" id="btn_5_OFF" value="OFF" class="btn btn-danger btn-xs" onclick="Relay_OFF(this,'Relay_5','_OFF');"><br>
         </form>
-
+</div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io.connect(document.location.href);
@@ -52,19 +58,16 @@
         console.log("\n" + "Welcome " + data.client);
         console.log("Number of client connected: " + data.clientCount);
     });
-
     socket.on('on disconnect',function(data) {
         console.log("\n" + "New client: " + data.client);
         console.log("Number of client connected: " + data.clientCount);
     });
-
     socket.on('your id',function(data) {
         console.log("\n" + "Your id number: " + data.id);
         myId = data.id;
     });
-
     socket.on('ack button status', function (data){
-        if(myId === data.by){
+        if(myId == data.by){
             console.log("You send: " + data.status);
         }
         else{
@@ -72,10 +75,10 @@
         }
 
         // DRY
-        if(data.status === '_ON'){
+        if(data.status == '_ON'){
             document.getElementById(data.whichOne).style.background = "#59d018";
         }
-        else if(data.status === '_OFF') {
+        else if(data.status == '_OFF') {
             document.getElementById(data.whichOne).style.background = "#d3ffa7";
         }
     });
@@ -88,6 +91,17 @@
         socket.emit('button update event', { whichOne: relay , status: stan});
     }
 
+    function CheckConnect(button,relay,stan){
+        socket.emit('button update event', { whichOne: relay , status: stan});
+    }
+
+    function Connect(button,relay,stan){
+        socket.emit('button update event', { whichOne: relay , status: stan});
+    }
+
+    function Disconnect(button,relay,stan){
+        socket.emit('button update event', { whichOne: relay , status: stan});
+    }
 </script>
 </body>
 </html>
